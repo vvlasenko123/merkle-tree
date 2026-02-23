@@ -17,7 +17,7 @@ class MerkleTree {
      * returns: Merkle root
      */
     getConcatLeaves(leaves){
-        if (leaves.length == 1) {
+        if (leaves.length === 1) {
             return leaves[0];
         }
         else {
@@ -68,7 +68,18 @@ class MerkleTree {
 
 
 function verifyProof(proof, nodeHash, rootHash) {
-    // TODO Verify proof chain
+    let currentHash = nodeHash;
+
+    for (const item of proof) {
+        if (item.left) {
+            currentHash = concatHashes(item.hash, currentHash);
+        }
+        else {
+            currentHash = concatHashes(currentHash, item.hash);
+        }
+    }
+
+    return currentHash === rootHash;
 }
 
 

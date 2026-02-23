@@ -16,9 +16,51 @@ class Trie {
     constructor() {
         this.root = new TrieNode(null);
     }
-    insert(word) {
-        // TODO Insert word symbol by symbol
 
+    insert(word) {
+        let current = this.root;
+
+        for (const char of word) {
+            if (!current.children[char]) {
+                current.children[char] = new TrieNode(char);
+            }
+
+            current = current.children[char];
+        }
+
+        current.isWord = true;
+    }
+
+    hasNode(word){
+        let current = this.root;
+
+        for (const char of word) {
+            if (!current.children[char]) {
+                return false;
+            }
+
+            current = current.children[char];
+        }
+
+        return current.isWord;
+    }
+
+    getAllNodes(){
+        const result = [];
+
+        const traverse = (node, currentWord) => {
+            if (node.isWord) {
+                result.push(currentWord);
+            }
+
+            for (const key of Object.keys(node.children)) {
+                traverse(node.children[key], currentWord + key);
+            }
+        };
+
+        traverse(this.root, '');
+
+        return result;
     }
 }
 
