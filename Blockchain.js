@@ -18,22 +18,49 @@ class Block {
     }
 }
 
+function areEqualBytes(a, b) {
+    if (!a || !b) {
+        return false;
+    }
+
+    if (a.length !== b.length) {
+        return false;
+    }
+
+    for (let i = 0; i < a.length; i++) {
+        if (a[i] !== b[i]) {
+            return false;
+        }
+    }
+
+    return true;
+}
 
 class Blockchain {
     constructor() {
         
         this.chain = [
-             /* TODO 1: Create the genesis block here */ 
+                new Block('genesis')
             ];
     }
 
     addBlock(block){
-        // TODO 2 Compute block.previousHash = previousBlock.toHash()
-        this.chain.push(block)
+        const previousBlock = this.chain[this.chain.length - 1];
+        block.previousHash = previousBlock.toHash();
+        this.chain.push(block);
     }
 
     isValid(){
-        // TODO 3 Check every block previous hash
+        for (let i = 1; i < this.chain.length; i++) {
+            const currentBlock = this.chain[i];
+            const previousBlock = this.chain[i - 1];
+            const expectedPreviousHash = previousBlock.toHash();
+
+            if (!areEqualBytes(currentBlock.previousHash, expectedPreviousHash)) {
+                return false;
+            }
+        }
+
         return true;
     }
 }
